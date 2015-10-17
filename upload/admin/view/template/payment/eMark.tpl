@@ -24,43 +24,43 @@ Copyright (c) 2013 John Atkinson (jga)
       <table class="form">
         <tr>
           <td><span class="required">*</span> <?php echo $entry_username; ?></td>
-          <td><input type="text" name="bitcoin_rpc_username" value="<?php echo $bitcoin_rpc_username; ?>" style="width:300px;" />
+          <td><input type="text" name="eMark_rpc_username" value="<?php echo $eMark_rpc_username; ?>" style="width:300px;" />
             <?php if ($error_username) { ?>
             <span class="error"><?php echo $error_username; ?></span>
             <?php } ?></td>
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_address; ?></td>
-          <td><input type="text" name="bitcoin_rpc_address" value="<?php echo $bitcoin_rpc_address; ?>" style="width:300px;" />
+          <td><input type="text" name="eMark_rpc_address" value="<?php echo $eMark_rpc_address; ?>" style="width:300px;" />
             <?php if ($error_address) { ?>
             <span class="error"><?php echo $error_address; ?></span>
             <?php } ?></td>
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_password; ?></td>
-          <td><input type="text" name="bitcoin_rpc_password" value="<?php echo $bitcoin_rpc_password; ?>" style="width:300px;" />
+          <td><input type="text" name="eMark_rpc_password" value="<?php echo $eMark_rpc_password; ?>" style="width:300px;" />
             <?php if ($error_password) { ?>
             <span class="error"><?php echo $error_password; ?></span>
             <?php } ?></td>
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_port; ?></td>
-          <td><input type="text" name="bitcoin_rpc_port" value="<?php echo $bitcoin_rpc_port; ?>" style="width:300px;" />
+          <td><input type="text" name="eMark_rpc_port" value="<?php echo $eMark_rpc_port; ?>" style="width:300px;" />
             <?php if ($error_port) { ?>
             <span class="error"><?php echo $error_port; ?></span>
             <?php } ?></td>
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_prefix; ?></td>
-          <td><input type="text" name="bitcoin_prefix" value="<?php echo $bitcoin_prefix; ?>" style="width:300px;" />
+          <td><input type="text" name="eMark_prefix" value="<?php echo $eMark_prefix; ?>" style="width:300px;" />
             <?php if ($error_prefix) { ?>
             <span class="error"><?php echo $error_prefix; ?></span>
             <?php } ?></td>
         </tr>
 		<tr>
-          <td><?php echo $entry_blockchain; ?></td>
-          <td><select name="bitcoin_blockchain"> 
-              <?php if ($bitcoin_blockchain) { ?>
+          <td><?php echo $entry_show_DEM; ?></td>
+          <td><select name="eMark_show_DEM"> 
+              <?php if ($eMark_show_DEM) { ?>
               <option value="1" selected="selected"><?php echo $text_yes; ?></option>
               <option value="0"><?php echo $text_no; ?></option>
               <?php } else { ?>
@@ -70,21 +70,9 @@ Copyright (c) 2013 John Atkinson (jga)
             </select></td>
         </tr>
 		<tr>
-          <td><?php echo $entry_show_btc; ?></td>
-          <td><select name="bitcoin_show_btc"> 
-              <?php if ($bitcoin_show_btc) { ?>
-              <option value="1" selected="selected"><?php echo $text_yes; ?></option>
-              <option value="0"><?php echo $text_no; ?></option>
-              <?php } else { ?>
-              <option value="1"><?php echo $text_yes; ?></option>
-              <option value="0" selected="selected"><?php echo $text_no; ?></option>
-              <?php } ?>
-            </select></td>
-        </tr>
-		<tr>
-          <td><?php echo $entry_btc_decimal; ?></td>
-          <td><select name="bitcoin_btc_decimal"> 
-              <?php if ($bitcoin_btc_decimal == 8) { ?>
+          <td><?php echo $entry_DEM_decimal; ?></td>
+          <td><select name="eMark_DEM_decimal"> 
+              <?php if ($eMark_btc_decimal == 8) { ?>
               <option value="8" selected="selected"><?php echo $text_8; ?></option>
               <option value="7"><?php echo $text_7; ?></option>
               <option value="6"><?php echo $text_6; ?></option>
@@ -92,7 +80,7 @@ Copyright (c) 2013 John Atkinson (jga)
               <option value="4"><?php echo $text_4; ?></option>
               <option value="3"><?php echo $text_3; ?></option>
               <option value="2"><?php echo $text_2; ?></option>
-              <?php } else if ($bitcoin_btc_decimal == 7) { ?>
+              <?php } else if ($eMark_btc_decimal == 7) { ?>
               <option value="8"><?php echo $text_8; ?></option>
               <option value="7" selected="selected"><?php echo $text_7; ?></option>
               <option value="6"><?php echo $text_6; ?></option>
@@ -100,7 +88,7 @@ Copyright (c) 2013 John Atkinson (jga)
               <option value="4"><?php echo $text_4; ?></option>
               <option value="3"><?php echo $text_3; ?></option>
               <option value="2"><?php echo $text_2; ?></option>
-              <?php } else if ($bitcoin_btc_decimal == 6) { ?>
+              <?php } else if ($eMark_btc_decimal == 6) { ?>
               <option value="8"><?php echo $text_8; ?></option>
               <option value="7"><?php echo $text_7; ?></option>
               <option value="6" selected="selected"><?php echo $text_6; ?></option>
@@ -108,7 +96,7 @@ Copyright (c) 2013 John Atkinson (jga)
               <option value="4"><?php echo $text_4; ?></option>
               <option value="3"><?php echo $text_3; ?></option>
               <option value="2"><?php echo $text_2; ?></option>
-              <?php } else if ($bitcoin_btc_decimal == 5) { ?>
+              <?php } else if ($eMark_btc_decimal == 5) { ?>
               <option value="8"><?php echo $text_8; ?></option>
               <option value="7"><?php echo $text_7; ?></option>
               <option value="6"><?php echo $text_6; ?></option>
@@ -116,7 +104,7 @@ Copyright (c) 2013 John Atkinson (jga)
               <option value="4"><?php echo $text_4; ?></option>
               <option value="3"><?php echo $text_3; ?></option>
               <option value="2"><?php echo $text_2; ?></option>
-              <?php } else if ($bitcoin_btc_decimal == 3) { ?>
+              <?php } else if ($eMark_btc_decimal == 3) { ?>
               <option value="8"><?php echo $text_8; ?></option>
               <option value="7"><?php echo $text_7; ?></option>
               <option value="6"><?php echo $text_6; ?></option>
@@ -124,7 +112,7 @@ Copyright (c) 2013 John Atkinson (jga)
               <option value="4"><?php echo $text_4; ?></option>
               <option value="3" selected="selected"><?php echo $text_3; ?></option>
               <option value="2"><?php echo $text_2; ?></option>
-              <?php } else if ($bitcoin_btc_decimal == 2) { ?>
+              <?php } else if ($eMark_btc_decimal == 2) { ?>
               <option value="8"><?php echo $text_8; ?></option>
               <option value="7"><?php echo $text_7; ?></option>
               <option value="6"><?php echo $text_6; ?></option>
@@ -145,16 +133,16 @@ Copyright (c) 2013 John Atkinson (jga)
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_countdown_timer; ?></td>
-          <td><input type="text" name="bitcoin_countdown_timer" value="<?php echo $bitcoin_countdown_timer; ?>" style="width:300px;" />
+          <td><input type="text" name="eMark_countdown_timer" value="<?php echo $eMark_countdown_timer; ?>" style="width:300px;" />
             <?php if ($error_countdown_timer) { ?>
             <span class="error"><?php echo $error_countdown_timer; ?></span>
             <?php } ?></td>
         </tr>
           <tr>
             <td><?php echo $entry_order_status; ?></td>
-            <td><select name="bitcoin_order_status_id">
+            <td><select name="eMark_order_status_id">
                 <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $bitcoin_order_status_id) { ?>
+                <?php if ($order_status['order_status_id'] == $eMark_order_status_id) { ?>
                 <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                 <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -164,8 +152,8 @@ Copyright (c) 2013 John Atkinson (jga)
           </tr>
         <tr>
           <td><?php echo $entry_status; ?></td>
-          <td><select name="bitcoin_status"> 
-              <?php if ($bitcoin_status) { ?>
+          <td><select name="eMark_status"> 
+              <?php if ($eMark_status) { ?>
               <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
               <option value="0"><?php echo $text_disabled; ?></option>
               <?php } else { ?>
@@ -176,7 +164,7 @@ Copyright (c) 2013 John Atkinson (jga)
         </tr>
         <tr>
           <td><?php echo $entry_sort_order; ?></td>
-          <td><input type="text" name="bitcoin_sort_order" value="<?php echo $bitcoin_sort_order; ?>" size="1" /></td>
+          <td><input type="text" name="eMark_sort_order" value="<?php echo $eMark_sort_order; ?>" size="1" /></td>
         </tr>
       </table>
     </form>

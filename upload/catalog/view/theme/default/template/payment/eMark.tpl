@@ -5,7 +5,7 @@ Copyright (c) 2013 John Atkinson (jga)
 
 <?php if(!$error) { ?>
 	<div class="buttons">
-		<div class="right"><a id="button-pay" class="button"><span><?php echo $button_bitcoin_pay; ?></span></a></div>
+		<div class="right"><a id="button-pay" class="button"><span><?php echo $button_eMark_pay; ?></span></a></div>
 	</div>
 <?php } else { ?>
 	<div class="warning">
@@ -29,7 +29,7 @@ var countdown;
 clearInterval(countdown);
 countdown = 0;
 
-var timeleft = <?php echo $bitcoin_countdown_timer; ?>;
+var timeleft = <?php echo $eMark_countdown_timer; ?>;
 var checker = 0;
 var expired_countdown_content = '<div style="font-size:16px; padding:6px; text-align:center;"><?php echo $text_countdown_expired ?></div>';
 function timer () {			
@@ -53,12 +53,12 @@ $('#button-pay').on('click', function() {
 	if(timeleft > 0) {
 		html  = '<div id="payment-wrapper" style="position:relative;">';
 		html += '	<div id="payment-left" style="float:left; margin-top:20px;">';
-		html += '		<div style="font-size:16px; padding:6px; text-align:center;"><?php echo $text_please_send ?> <span style="font-size:18px; border-style:solid; border-width: 1px; border-radius:3px; padding-top:3px; padding-right:6px; padding-left:6px; padding-bottom:3px;"><?php echo $bitcoin_total; ?></span> <?php echo $text_btc_to ?> </div>';
-		html += '		<div style="font-size:16px; padding:6px; text-align:center;"><span style="font-size:18px; border-style:solid; border-width: 1px; border-radius:3px; padding-top:3px; padding-right:6px; padding-left:6px; padding-bottom:3px;"><?php echo $bitcoin_send_address; ?></span></div>';
+		html += '		<div style="font-size:16px; padding:6px; text-align:center;"><?php echo $text_please_send ?> <span style="font-size:18px; border-style:solid; border-width: 1px; border-radius:3px; padding-top:3px; padding-right:6px; padding-left:6px; padding-bottom:3px;"><?php echo $eMark_total; ?></span> <?php echo $text_DEM_to ?> </div>';
+		html += '		<div style="font-size:16px; padding:6px; text-align:center;"><span style="font-size:18px; border-style:solid; border-width: 1px; border-radius:3px; padding-top:3px; padding-right:6px; padding-left:6px; padding-bottom:3px;"><?php echo $eMark_send_address; ?></span></div>';
 		html += '		<div style="font-size:16px; padding:6px; text-align:center;"> <?php echo $text_to_complete ?></div>';
-		html += '		<div style="font-size:16px; padding:6px; text-align:center;"><a style="font-size: 16px;" href="bitcoin:<?php echo $bitcoin_send_address; ?>?amount=<?php echo $bitcoin_total; ?>"><?php echo $text_click_pay ?></a> <?php echo $text_uri_compatible ?></div>';
+		html += '		<div style="font-size:16px; padding:6px; text-align:center;"><a style="font-size: 16px;" href="eMark:<?php echo $eMark_send_address; ?>?amount=<?php echo $eMark_total; ?>"><?php echo $text_click_pay ?></a> <?php echo $text_uri_compatible ?></div>';
 		html += '	</div>';
-		html += '<div id="payment-right" style="float: right;"><img src="http://chart.apis.google.com/chart?cht=qr&chl=bitcoin:<?php echo $bitcoin_send_address; ?>?amount=<?php echo $bitcoin_total; ?>&chs=160x160"></div></div>';
+		html += '<div id="payment-right" style="float: right;"><img src="http://chart.apis.google.com/chart?cht=qr&chl=eMark:<?php echo $eMark_send_address; ?>?amount=<?php echo $eMark_total; ?>&chs=160x160"></div></div>';
 		html += '<div class="buttons" style="clear: both; margin-bottom:6px; margin-top:12px;">';
 		html += '	<div class="center" style="font-size: 16px;"><?php echo $text_pre_timer ?><span id="timer" style="font-size:18px; font-weight:bold;"></span><?php echo $text_post_timer ?></div>';
 		html += '</div>';
@@ -77,11 +77,11 @@ $('#button-pay').on('click', function() {
 		href: false,
 		html: html,
 		onComplete: function() {
-			checker = setInterval(bitcoin_check, 5000);
+			checker = setInterval(eMark_check, 5000);
 			$('#button-confirm').on('click', function() {
 				$.ajax({ 
 					type: 'GET',
-					url: 'index.php?route=payment/bitcoin/confirm_sent',
+					url: 'index.php?route=payment/eMark/confirm_sent',
 					timeout: 5000,
 					dataType: 'text',
 					error: function() {
@@ -97,11 +97,11 @@ $('#button-pay').on('click', function() {
 					}	
 				});
 			});
-			function bitcoin_check () {
+			function eMark_check () {
 				if(timeleft > 0) {
 					$.ajax({ 
 						type: 'GET',
-						url: 'index.php?route=payment/bitcoin/confirm_sent',
+						url: 'index.php?route=payment/eMark/confirm_sent',
 						timeout: 5000,
 						dataType: 'text',
 						error: function() {

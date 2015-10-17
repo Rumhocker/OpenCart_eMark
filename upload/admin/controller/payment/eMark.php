@@ -2,31 +2,31 @@
 /*
 Copyright (c) 2013 John Atkinson (jga)
 */
-class ControllerPaymentBitcoin extends Controller {
+class ControllerPaymenteMark extends Controller {
 	private $error = array();
-	private $payment_module_name  = 'bitcoin';
+	private $payment_module_name  = 'eMark';
 	
 	private function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/'.$this->payment_module_name)) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-        if (!$this->request->post['bitcoin_rpc_username']) {
+        if (!$this->request->post['eMark_rpc_username']) {
             $this->error['username'] = $this->language->get('error_username');
         }
-        if (!$this->request->post['bitcoin_rpc_address']) {
+        if (!$this->request->post['eMark_rpc_address']) {
             $this->error['address'] = $this->language->get('error_address');
         }
-        if (!$this->request->post['bitcoin_rpc_password']) {
+        if (!$this->request->post['eMark_rpc_password']) {
             $this->error['password'] = $this->language->get('error_password');
         }
-        if (!$this->request->post['bitcoin_rpc_port']) {
+        if (!$this->request->post['eMark_rpc_port']) {
             $this->error['port'] = $this->language->get('error_port');
         }
-        if (!$this->request->post['bitcoin_prefix']) {
+        if (!$this->request->post['eMark_prefix']) {
             $this->error['prefix'] = $this->language->get('error_prefix');
         }
-        if (!$this->request->post['bitcoin_countdown_timer']) {
+        if (!$this->request->post['eMark_countdown_timer']) {
             $this->error['countdown_timer'] = $this->language->get('error_countdown_timer');
         }
 		
@@ -75,9 +75,8 @@ class ControllerPaymentBitcoin extends Controller {
         $this->data['entry_port']       = $this->language->get('entry_port');
         $this->data['entry_prefix']       = $this->language->get('entry_prefix');
         $this->data['entry_order_status'] = $this->language->get('entry_order_status');
-        $this->data['entry_show_btc']         = $this->language->get('entry_show_btc');
-        $this->data['entry_blockchain']         = $this->language->get('entry_blockchain');
-        $this->data['entry_btc_decimal']         = $this->language->get('entry_btc_decimal');
+        $this->data['entry_show_DEM']         = $this->language->get('entry_show_DEM');
+        $this->data['entry_DEM_decimal']         = $this->language->get('entry_DEM_decimal');
         $this->data['entry_countdown_timer']         = $this->language->get('entry_countdown_timer');
         $this->data['entry_status']         = $this->language->get('entry_status');
 		$this->data['entry_sort_order'] 	= $this->language->get('entry_sort_order');
@@ -136,28 +135,28 @@ class ControllerPaymentBitcoin extends Controller {
 
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('payment/bitcoin', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('payment/eMark', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => ' :: '
         );
 		
 		$result = $this->db->query("SHOW COLUMNS FROM ". DB_PREFIX ."order;");
 		$rows = $result->rows;
 		$max = $result->num_rows;
-		$bitcoin_total_in_db = 0;
-		$bitcoin_address_in_db = 0;
+		$eMark_total_in_db = 0;
+		$eMark_address_in_db = 0;
 		for($i = 0;$i < $max;$i++) {
-			if($rows[$i]["Field"] == "bitcoin_total") {
-				$bitcoin_total_in_db = 1;
+			if($rows[$i]["Field"] == "eMark_total") {
+				$eMark_total_in_db = 1;
 			}
-			if($rows[$i]["Field"] == "bitcoin_address") {
-				$bitcoin_address_in_db = 1;
+			if($rows[$i]["Field"] == "eMark_address") {
+				$eMark_address_in_db = 1;
 			}
 		}
-		if(!$bitcoin_total_in_db) {
-			$this->db->query("ALTER TABLE ". DB_PREFIX ."order ADD bitcoin_total DOUBLE AFTER currency_value;");
+		if(!$eMark_total_in_db) {
+			$this->db->query("ALTER TABLE ". DB_PREFIX ."order ADD eMark_total DOUBLE AFTER currency_value;");
 		}
-		if(!$bitcoin_address_in_db) {
-			$this->db->query("ALTER TABLE ". DB_PREFIX ."order ADD bitcoin_address VARCHAR(34) AFTER bitcoin_total;");
+		if(!$eMark_address_in_db) {
+			$this->db->query("ALTER TABLE ". DB_PREFIX ."order ADD eMark_address VARCHAR(34) AFTER eMark_total;");
 		}
 
 		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/'.$this->payment_module_name.'&token=' . $this->session->data['token'];
@@ -191,20 +190,15 @@ class ControllerPaymentBitcoin extends Controller {
 		} else {
 			$this->data[$this->payment_module_name.'_prefix'] = $this->config->get($this->payment_module_name.'_prefix');
 		} 
-        if (isset($this->request->post[$this->payment_module_name.'_show_btc'])) {
-			$this->data[$this->payment_module_name.'_show_btc'] = $this->request->post[$this->payment_module_name.'_show_btc'];
+        if (isset($this->request->post[$this->payment_module_name.'_show_DEM'])) {
+			$this->data[$this->payment_module_name.'_show_DEM'] = $this->request->post[$this->payment_module_name.'_show_DEM'];
 		} else {
-			$this->data[$this->payment_module_name.'_show_btc'] = $this->config->get($this->payment_module_name.'_show_btc');
+			$this->data[$this->payment_module_name.'_show_DEM'] = $this->config->get($this->payment_module_name.'_show_DEM');
 		}
-        if (isset($this->request->post[$this->payment_module_name.'_blockchain'])) {
-			$this->data[$this->payment_module_name.'_blockchain'] = $this->request->post[$this->payment_module_name.'_blockchain'];
+        if (isset($this->request->post[$this->payment_module_name.'_DEM_decimal'])) {
+			$this->data[$this->payment_module_name.'_DEM_decimal'] = $this->request->post[$this->payment_module_name.'_DEM_decimal'];
 		} else {
-			$this->data[$this->payment_module_name.'_blockchain'] = $this->config->get($this->payment_module_name.'_blockchain');
-		}
-        if (isset($this->request->post[$this->payment_module_name.'_btc_decimal'])) {
-			$this->data[$this->payment_module_name.'_btc_decimal'] = $this->request->post[$this->payment_module_name.'_btc_decimal'];
-		} else {
-			$this->data[$this->payment_module_name.'_btc_decimal'] = $this->config->get($this->payment_module_name.'_btc_decimal');
+			$this->data[$this->payment_module_name.'_DEM_decimal'] = $this->config->get($this->payment_module_name.'_DEM_decimal');
 		}
         if (isset($this->request->post[$this->payment_module_name.'_countdown_timer'])) {
 			$this->data[$this->payment_module_name.'_countdown_timer'] = $this->request->post[$this->payment_module_name.'_countdown_timer'];

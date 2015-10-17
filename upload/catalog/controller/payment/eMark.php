@@ -3,14 +3,14 @@
 Copyright (c) 2013 John Atkinson (jga)
 */
 
-class ControllerPaymentBitcoin extends Controller {
+class ControllerPaymenteMark extends Controller {
 
-    private $payment_module_name  = 'bitcoin';
+    private $payment_module_name  = 'eMark';
 	protected function index() {
         $this->language->load('payment/'.$this->payment_module_name);
-    	$this->data['button_bitcoin_pay'] = $this->language->get('button_bitcoin_pay');
+    	$this->data['button_eMark_pay'] = $this->language->get('button_eMark_pay');
     	$this->data['text_please_send'] = $this->language->get('text_please_send');
-    	$this->data['text_btc_to'] = $this->language->get('text_btc_to');
+    	$this->data['text_DEM_to'] = $this->language->get('text_DEM_to');
     	$this->data['text_to_complete'] = $this->language->get('text_to_complete');
     	$this->data['text_click_pay'] = $this->language->get('text_click_pay');
     	$this->data['text_uri_compatible'] = $this->language->get('text_uri_compatible');
@@ -22,45 +22,45 @@ class ControllerPaymentBitcoin extends Controller {
 		$this->data['error_msg'] = $this->language->get('error_msg');
 		$this->data['error_confirm'] = $this->language->get('error_confirm');
 		$this->data['error_incomplete_pay'] = $this->language->get('error_incomplete_pay');
-		$this->data['bitcoin_countdown_timer'] = $this->config->get('bitcoin_countdown_timer');
-		$bitcoin_btc_decimal = $this->config->get('bitcoin_btc_decimal');
+		$this->data['eMark_countdown_timer'] = $this->config->get('eMark_countdown_timer');
+		$eMark_DEM_decimal = $this->config->get('eMark_DEM_decimal');
 				
-		$this->checkUpdate();
+//		$this->checkUpdate();
 	
         $this->load->model('checkout/order');
 		$order_id = $this->session->data['order_id'];
 		$order = $this->model_checkout_order->getOrder($order_id);
 
 		$current_default_currency = $this->config->get('config_currency');
-		$this->data['bitcoin_total'] = sprintf("%.".$bitcoin_btc_decimal."f", round($this->currency->convert($order['total'], $current_default_currency, "BTC"),$bitcoin_btc_decimal));
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET bitcoin_total = '" . $this->data['bitcoin_total'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+		$this->data['eMark_total'] = sprintf("%.".$eMark_DEM_decimal."f", round($this->currency->convert($order['total'], $current_default_currency, "DEM"),$eMark_DEM_decimal));
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET eMark_total = '" . $this->data['eMark_total'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 
 		require_once('jsonRPCClient.php');
 		
-		$bitcoin = new jsonRPCClient('http://'.$this->config->get('bitcoin_rpc_username').':'.$this->config->get('bitcoin_rpc_password').'@'.$this->config->get('bitcoin_rpc_address').':'.$this->config->get('bitcoin_rpc_port').'/');
+		$eMark = new jsonRPCClient('http://'.$this->config->get('eMark_rpc_username').':'.$this->config->get('eMark_rpc_password').'@'.$this->config->get('eMark_rpc_address').':'.$this->config->get('eMark_rpc_port').'/');
 		
 		$this->data['error'] = false;
 		try {
-			$bitcoin_info = $bitcoin->getinfo();
+			$eMark_info = $eMark->getinfo();
 		} catch (Exception $e) {
 			$this->data['error'] = true;
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/bitcoin.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/payment/bitcoin.tpl';
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/eMark.tpl')) {
+				$this->template = $this->config->get('config_template') . '/template/payment/eMark.tpl';
 			} else {
-				$this->template = 'default/template/payment/bitcoin.tpl';
+				$this->template = 'default/template/payment/eMark.tpl';
 			}	
 			$this->render();
 			return;
 		}
 		$this->data['error'] = false;
 		
-		$this->data['bitcoin_send_address'] = $bitcoin->getaccountaddress($this->config->get('bitcoin_prefix').'_'.$order_id);
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET bitcoin_address = '" . $this->data['bitcoin_send_address'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+		$this->data['eMark_send_address'] = $eMark->getaccountaddress($this->config->get('eMark_prefix').'_'.$order_id);
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET eMark_address = '" . $this->data['eMark_send_address'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/bitcoin.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/bitcoin.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/eMark.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/payment/eMark.tpl';
 		} else {
-			$this->template = 'default/template/payment/bitcoin.tpl';
+			$this->template = 'default/template/payment/eMark.tpl';
 		}	
 		
 		$this->render();
@@ -72,37 +72,23 @@ class ControllerPaymentBitcoin extends Controller {
 		$order_id = $this->session->data['order_id'];
         $order = $this->model_checkout_order->getOrder($order_id);
 		$current_default_currency = $this->config->get('config_currency');	
-		$bitcoin_btc_decimal = $this->config->get('bitcoin_btc_decimal');	
-		$bitcoin_total = $order['bitcoin_total'];
-		$bitcoin_address = $order['bitcoin_address'];
-		if(!$this->config->get('bitcoin_blockchain')) {
-			require_once('jsonRPCClient.php');
-			$bitcoin = new jsonRPCClient('http://'.$this->config->get('bitcoin_rpc_username').':'.$this->config->get('bitcoin_rpc_password').'@'.$this->config->get('bitcoin_rpc_address').':'.$this->config->get('bitcoin_rpc_port').'/');
-		
-			try {
-				$bitcoin_info = $bitcoin->getinfo();
-			} catch (Exception $e) {
-				$this->data['error'] = true;
-			}
+		$eMark_DEM_decimal = $this->config->get('eMark_DEM_decimal');	
+		$eMark_total = $order['eMark_total'];
+		$eMark_address = $order['eMark_address'];
+		require_once('jsonRPCClient.php');
+		$eMark = new jsonRPCClient('http://'.$this->config->get('eMark_rpc_username').':'.$this->config->get('eMark_rpc_password').'@'.$this->config->get('eMark_rpc_address').':'.$this->config->get('eMark_rpc_port').'/');
+	
+		try {
+			$eMark_info = $eMark->getinfo();
+		} catch (Exception $e) {
+			$this->data['error'] = true;
 		}
 
 		try {
-			if(!$this->config->get('bitcoin_blockchain')) {
-				$received_amount = $bitcoin->getreceivedbyaddress($bitcoin_address,0);
-			}
-			else {
-				static $ch = null;
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; Blockchain.info PHP client; '.php_uname('s').'; PHP/'.phpversion().')');
-				curl_setopt($ch, CURLOPT_URL, 'http://blockchain.info/q/getreceivedbyaddress/'.$bitcoin_address.'?confirmations=0');
-				$res = curl_exec($ch);
-				if ($res === false) throw new Exception('Could not get reply: '.curl_error($ch));
-				$received_amount = $res / 100000000;
-			}
-			if(round((float)$received_amount,$bitcoin_btc_decimal) >= round((float)$bitcoin_total,$bitcoin_btc_decimal)) {
+			$received_amount = $eMark->getreceivedbyaddress($eMark_address,0);
+			if(round((float)$received_amount,$eMark_DEM_decimal) >= round((float)$eMark_total,$eMark_DEM_decimal)) {
 				$order = $this->model_checkout_order->getOrder($order_id);
-				$this->model_checkout_order->confirm($order_id, $this->config->get('bitcoin_order_status_id'));
+				$this->model_checkout_order->confirm($order_id, $this->config->get('eMark_order_status_id'));
 				echo "1";
 			}
 			else {
@@ -113,15 +99,15 @@ class ControllerPaymentBitcoin extends Controller {
 			echo "0";
 		}
 	}
-	
+/*	
 	public function checkUpdate() {
 		if (extension_loaded('curl')) {
 			$data = array();
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = 'BTC'");
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = 'DEM'");
 						
 			if(!$query->row) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "currency (title, code, symbol_right, decimal_place, status) VALUES ('Bitcoin', 'BTC', ' BTC', ".$this->config->get('bitcoin_btc_decimal').", ".$this->config->get('bitcoin_show_btc').")");
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = 'BTC'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "currency (title, code, symbol_right, decimal_place, status) VALUES ('eMark', 'DEM', ' DEM', ".$this->config->get('eMark_DEM_decimal').", ".$this->config->get('eMark_show_DEM').")");
+				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = 'DEM'");
 			}
 			
 			$format = '%Y-%m-%d %H:%M:%S';
@@ -146,10 +132,10 @@ class ControllerPaymentBitcoin extends Controller {
 			}
 		}
 	}
-	
+*/	
 	public function runUpdate() {
 		$default_currency_code = $this->config->get('config_currency');
-		$path = "1/BTC". $default_currency_code . "/ticker";
+		$path = "1/DEM". $default_currency_code . "/ticker";
 		$req = array();
 		
 		// API settings
@@ -184,11 +170,11 @@ class ControllerPaymentBitcoin extends Controller {
 		if ($res === false) throw new Exception('Could not get reply: '.curl_error($ch));
 		$dec = json_decode($res, true);
 		if (!$dec) throw new Exception('Invalid data received, please make sure connection is working and requested API exists');
-		$btcdata = $dec;
+		$DEMdata = $dec;
 		
-		$currency = "BTC";
-		$avg_value = $btcdata['return']['avg']['value'];
-		$last_value = $btcdata['return']['last']['value'];
+		$currency = "DEM";
+		$avg_value = $DEMdata['return']['avg']['value'];
+		$last_value = $DEMdata['return']['last']['value'];
 				
 		if ((float)$avg_value && (float)$last_value) {
 			if($avg_value < $last_value) {
