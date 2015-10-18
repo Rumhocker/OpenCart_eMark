@@ -21,7 +21,7 @@ This extension now requires previous installation of [vQmod](https://code.google
 
 # Installation
 
-1. Install vQmod.
+1. Install vQmod. Copy folder vqmode into your opencart root folder. Call http://yoururl/vqmod/install/.
 2. Upload all files maintaining OpenCart folder structure.
 3. Install the payment module in the admin console (Extensions > Payments > eMark > Install).
 4. Edit the payment module settings (Extensions > Payments > eMark > Edit).
